@@ -17,9 +17,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // ВОТ ЭТОТ БЛОК ВЫЗЫВАЕТ ОШИБКУ, ЕГО НУЖНО ЗАКОММЕНТИРОВАТЬ:
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        // Оставляем только твою фабрику для Новостей:
+        \App\Models\Article::factory(10)->create();
     }
 }

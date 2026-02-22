@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController; // Импортируем контроллер
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
 
 // Главная теперь вызывает метод index контроллера
 Route::get('/', [MainController::class, 'index']);
@@ -27,3 +28,5 @@ Route::get('/signin', [AuthController::class, 'create']);
 
 // Обработка формы (POST)
 Route::post('/signin', [AuthController::class, 'registration']);
+
+Route::get('/articles', [ArticleController::class, 'index']);

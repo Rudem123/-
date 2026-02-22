@@ -16,6 +16,7 @@
 <header>
     <nav>
         <a href="/">Главная</a>
+        <a href="/articles">Новости</a>
         <a href="/about">О нас</a>
         <a href="/contacts">Контакты</a>
         <a href="/signin">Регистрация</a>
