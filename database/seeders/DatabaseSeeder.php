@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Comment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -25,5 +26,7 @@ class DatabaseSeeder extends Seeder
 
         // Оставляем только твою фабрику для Новостей:
         \App\Models\Article::factory(10)->create();
+        
+        Comment::factory(20)->create();
     }
 }

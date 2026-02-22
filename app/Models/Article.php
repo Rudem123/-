@@ -11,4 +11,8 @@ class Article extends Model
 
     // Здесь могут быть твои настройки, например:
     protected $fillable = ['date', 'name', 'shortDesc', 'desc', 'preview_image', 'full_image'];
+
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
 }

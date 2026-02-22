@@ -31,3 +31,6 @@ Route::post('/signin', [AuthController::class, 'registration']);
 
 // Это создаст сразу 7 маршрутов для всех CRUD операций
 Route::resource('articles', ArticleController::class);
+
+Route::post('/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{id}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');

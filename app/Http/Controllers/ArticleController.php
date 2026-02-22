@@ -10,8 +10,9 @@ class ArticleController extends Controller
     // 1. СПИСОК (с пагинацией)
     public function index()
     {
-        // Выводим по 5 новостей на страницу
-        $articles = Article::latest()->paginate(5); 
+        // Сортировка строго по ID от 1 до 20
+        $articles = Article::orderBy('id', 'asc')->paginate(5);
+        
         return view('articles.index', compact('articles'));
     }
 
