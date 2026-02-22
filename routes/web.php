@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController; // Импортируем контроллер
+use App\Http\Controllers\AuthController;
 
 // Главная теперь вызывает метод index контроллера
 Route::get('/', [MainController::class, 'index']);
@@ -13,9 +14,16 @@ Route::get('/galery', [MainController::class, 'galery']);
 Route::get('/about', function () { return view('about'); });
 Route::get('/contacts', function () {
     return view('contacts', [
-        'address' => 'г. Москва, ул. Королева, 12',
-        'phone' => '+7 (999) 123-45-67',
-        'email' => 'support@laravel.ru',
+        'address' => 'г. Москва, ул. Прянишникова, 2а',
+        'phone' => '+7 (999) 9964397283',
+        'email' => 'trafimovrudem@gmail.com',
         'work_hours' => 'Пн-Пт 9:00 - 18:00'
     ]);
 });
+
+// Маршруты для регистрации
+// Показ формы (GET)
+Route::get('/signin', [AuthController::class, 'create']);
+
+// Обработка формы (POST)
+Route::post('/signin', [AuthController::class, 'registration']);
