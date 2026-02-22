@@ -1,25 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MainController; // Импортируем контроллер
 
-// Главная страница
-Route::get('/', function () {
-    return view('home');
-});
+// Главная теперь вызывает метод index контроллера
+Route::get('/', [MainController::class, 'index']);
 
-// Страница О нас
-Route::get('/about', function () {
-    return view('about');
-});
+// Маршрут для галереи
+Route::get('/galery', [MainController::class, 'galery']);
 
-// Страница Контакты с передачей массива данных
+// Старые маршруты из прошлой лабы оставляем без изменений
+Route::get('/about', function () { return view('about'); });
 Route::get('/contacts', function () {
-    $contactInfo = [
-        'address' => 'г. Москва, ул. Академика Королева, д. 12',
+    return view('contacts', [
+        'address' => 'г. Москва, ул. Королева, 12',
         'phone' => '+7 (999) 123-45-67',
-        'email' => 'support@laravel-project.ru',
-        'work_hours' => 'Пн-Пт с 9:00 до 18:00'
-    ];
-
-    return view('contacts', $contactInfo);
+        'email' => 'support@laravel.ru',
+        'work_hours' => 'Пн-Пт 9:00 - 18:00'
+    ]);
 });

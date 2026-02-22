@@ -19,13 +19,22 @@ if (-not (Test-Path ".git")) {
 git remote remove origin 2>$null
 git remote add origin https://github.com/Rudem123/-.git
 
-# Добавление всех файлов
-git add .
-
-# Коммит
-git commit -m "Initial commit" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    git commit -m "Update project"
+# Проверка изменений
+$status = git status --porcelain
+if ($status) {
+    # Добавление всех файлов
+    git add .
+    
+    # Коммит на русском языке
+    $commitMessage = "Обновление проекта"
+    if (git log --oneline -1 2>$null) {
+        $commitMessage = "Обновление проекта: добавлены новые файлы и изменения"
+    } else {
+        $commitMessage = "Начальный коммит: добавлены все файлы проекта"
+    }
+    git commit -m $commitMessage
+} else {
+    Write-Host "Нет изменений для коммита"
 }
 
 # Пуш на GitHub

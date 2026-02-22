@@ -16,8 +16,8 @@ git remote add origin https://github.com/Rudem123/-.git
 # Добавьте все файлы
 git add .
 
-# Сделайте коммит
-git commit -m "Initial commit"
+# Сделайте коммит на русском языке
+git commit -m "Обновление проекта: добавлены новые файлы и изменения"
 
 # Переименуйте ветку в main (если нужно)
 git branch -M main
@@ -25,5 +25,7 @@ git branch -M main
 # Загрузите на GitHub
 git push -u origin main --force
 ```
+
+**Альтернативный способ:** Запустите файл `git_push.bat` двойным кликом - он выполнит все команды автоматически.
 
 Если возникнут проблемы с аутентификацией, используйте Personal Access Token вместо пароля.
