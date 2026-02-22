@@ -29,4 +29,5 @@ Route::get('/signin', [AuthController::class, 'create']);
 // Обработка формы (POST)
 Route::post('/signin', [AuthController::class, 'registration']);
 
-Route::get('/articles', [ArticleController::class, 'index']);
+// Это создаст сразу 7 маршрутов для всех CRUD операций
+Route::resource('articles', ArticleController::class);

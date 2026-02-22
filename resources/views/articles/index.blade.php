@@ -1,30 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Список новостей</h1>
-    <table border="1" style="width:100%; border-collapse: collapse; text-align: left;">
-        <thead>
-            <tr style="background: #f4f4f4;">
-                <th>Дата</th>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Управление новостями</h1>
+        <a href="{{ route('articles.create') }}" class="btn btn-success">+ Добавить новость</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Превью</th> <!-- Добавили заголовок -->
                 <th>Название</th>
-                <th>Превью</th>
-                <th>Краткое описание</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             @foreach($articles as $article)
             <tr>
-                <td>{{ $article->date }}</td>
+                <td>{{ $article->id }}</td>
+                <td>
+                    <!-- Возвращаем вывод картинки -->
+                    <img src="{{ asset('img/' . $article->preview_image) }}" width="70" class="img-thumbnail">
+                </td>
                 <td>{{ $article->name }}</td>
                 <td>
-                    <!-- Ссылка на галерею с передачей имени полноразмерного фото -->
-                    <a href="/galery?img={{ $article->full_image }}">
-                        <img src="{{ asset('img/' . $article->preview_image) }}" width="100">
-                    </a>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ route('articles.show', $article->id) }}" class="btn btn-outline-primary">👁 Просмотр</a>
+                        <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-outline-secondary">✏ Редакт.</a>
+                        
+                        <form action="{{ route('articles.destroy', $article->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Удалить?')">🗑</button>
+                        </form>
+                    </div>
                 </td>
-                <td>{{ $article->shortDesc ?? 'Нет описания' }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-center">
+        {{ $articles->links() }}
+    </div>
 @endsection

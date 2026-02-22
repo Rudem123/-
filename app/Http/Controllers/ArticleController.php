@@ -2,14 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article; // Импортируем модель
+use App\Models\Article;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+    // 1. СПИСОК (с пагинацией)
     public function index()
     {
-        // Получаем все новости из базы данных
-        $articles = Article::all(); 
-        return view('articles.index', ['articles' => $articles]);
+        // Выводим по 5 новостей на страницу
+        $articles = Article::latest()->paginate(5); 
+        return view('articles.index', compact('articles'));
+    }
+
+    // 2. ФОРМА СОЗДАНИЯ
+    public function create()
+    {
+        return view('articles.create');
+    }
+
+    // 3. СОХРАНЕНИЕ НОВОЙ ЗАПИСИ
+    public function store(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'name' => 'required|min:5',
+            'desc' => 'required',
+        ]);
+
+        Article::create($request->all() + [
+            'preview_image' => 'preview.jpg', // заглушки для лабы
+            'full_image' => 'full.jpeg'
+        ]);
+
+        return redirect()->route('articles.index');
+    }
+
+    // 4. ПРОСМОТР ОДНОЙ НОВОСТИ
+    public function show(Article $article)
+    {
+        return view('articles.show', compact('article'));
+    }
+
+    // 5. ФОРМА РЕДАКТИРОВАНИЯ
+    public function edit(Article $article)
+    {
+        return view('articles.edit', compact('article'));
+    }
+
+    // 6. ОБНОВЛЕНИЕ ДАННЫХ
+    public function update(Request $request, Article $article)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'name' => 'required|min:5',
+            'desc' => 'required',
+        ]);
+
+        $article->update($request->all());
+
+        return redirect()->route('articles.index');
+    }
+
+    // 7. УДАЛЕНИЕ
+    public function destroy(Article $article)
+    {
+        $article->delete();
+        return redirect()->route('articles.index');
     }
 }
