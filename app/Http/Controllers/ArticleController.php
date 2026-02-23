@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ArticleCreatedMail;
 use App\Models\Article;
+use App\Jobs\VeryLongJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -49,9 +50,9 @@ class ArticleController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        // 4. ОТПРАВКА ПИСЬМА
-        // Так как только модератор может сюда "попасть", письмо отправится в момент его действий.
-        Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
+        // 4. ОТПРАВКА ПИСЬМА (ЧЕРЕЗ ОЧЕРЕДЬ)
+        // Мы не отправляем письмо сразу, а кидаем задачу в очередь.
+        VeryLongJob::dispatch($article);
 
 
         return redirect()->route('articles.index');
