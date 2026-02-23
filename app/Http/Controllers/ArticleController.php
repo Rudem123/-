@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ 
+use App\Events\NewArticleEvent;
 use App\Mail\ArticleCreatedMail;
 use App\Models\Article;
 use App\Jobs\VeryLongJob;
@@ -49,6 +50,9 @@ class ArticleController extends Controller
             'full_image' => 'full.jpeg',
             'user_id' => auth()->id(),
         ]);
+
+        // 3.5 ВЫЗОВ СОБЫТИЯ (ДЛЯ REAL-TIME УВЕДОМЛЕНИЙ)
+        event(new NewArticleEvent($article));
 
         // 4. ОТПРАВКА ПИСЬМА (ЧЕРЕЗ ОЧЕРЕДЬ)
         // Мы не отправляем письмо сразу, а кидаем задачу в очередь.

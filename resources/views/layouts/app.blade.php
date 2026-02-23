@@ -11,8 +11,10 @@
         main { flex: 1; padding: 20px; }
         footer { background: #eee; padding: 10px; text-align: center; border-top: 1px solid #ccc; }
     </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <div id="app"></div>
 
 <header>
 <nav class="navbar navbar-expand navbar-dark bg-dark px-3">
