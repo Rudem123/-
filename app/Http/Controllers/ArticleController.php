@@ -29,25 +29,32 @@ class ArticleController extends Controller
     // 3. СОХРАНЕНИЕ НОВОЙ ЗАПИСИ
     public function store(Request $request)
     {
-        Gate::authorize('create', Article::class);
+        // 1. ПРОВЕРКА ПРАВ (Важнейший шаг!)
+        // Если зайдёт обычный юзер, Laravel выдаст ошибку 403 и письмо не отправится.
+        $this->authorize('create', Article::class);
 
+        // 2. ВАЛИДАЦИЯ
         $request->validate([
             'date' => 'required|date',
             'name' => 'required|min:5',
             'desc' => 'required',
         ]);
 
-        // 1. Создаем статью
+        // 3. СОХРАНЕНИЕ
         $article = Article::create($request->all() + [
-            'preview_image' => 'preview.jpg', // заглушки для лабы
+            'preview_image' => 'preview.jpg',
             'full_image' => 'full.jpeg',
+            'user_id' => auth()->id()
         ]);
 
-        // 2. Отправляем письмо модератору (укажи адрес админа)
-        Mail::to('admin@mail.ru')->send(new ArticleCreatedMail($article));
+        // 4. ОТПРАВКА ПИСЬМА
+        // Так как только модератор может сюда "попасть", письмо отправится в момент его действий.
+        // Укажи здесь почту, куда должно прийти уведомление (например, твою личную для теста).
+        Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
 
         return redirect()->route('articles.index');
     }
+
 
 
     // 4. ПРОСМОТР ОДНОЙ НОВОСТИ
