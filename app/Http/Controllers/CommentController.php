@@ -16,7 +16,7 @@ class CommentController extends Controller
         Comment::create([
             'text' => $request->text,
             'article_id' => $request->article_id,
-            'user_id' => Auth::id(), // Привязываем к текущему пользователю
+            'user_id' => auth()->id(), // Автоматически берем ID вошедшего юзера
         ]);
 
         return back();
@@ -26,12 +26,12 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
-        // Модератор может всё (через Gate::before), обычный юзер - ничего здесь
-        // Но по заданию: "Модератор может выполнять любые действия с комментариями"
-        Gate::authorize('delete', $comment);
+        // Используем новое имя шлюза для комментариев
+        Gate::authorize('delete-comment', $comment);
 
         $comment->delete();
 
         return back();
     }
+
 }

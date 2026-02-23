@@ -30,5 +30,17 @@ class AppServiceProvider extends ServiceProvider
                 return true;
             }
         });
+
+        // Право на изменение/удаление комментария
+        Gate::define('update-comment', function (User $user, \App\Models\Comment $comment) {
+            // Доступно только автору
+            return $user->id === $comment->user_id;
+        });
+
+        Gate::define('delete-comment', function (User $user, \App\Models\Comment $comment) {
+            // Доступно только автору (модератор пройдет через Gate::before)
+            return $user->id === $comment->user_id;
+        });
     }
+
 }

@@ -19,6 +19,8 @@ class CommentFactory extends Factory
         return [
             'text' => $this->faker->sentence(),
             'article_id' => \App\Models\Article::all()->random()->id,
+            'user_id' => \App\Models\User::all()->random()->id,
         ];
+
     }
 }
