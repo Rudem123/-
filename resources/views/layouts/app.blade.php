@@ -32,9 +32,34 @@
 
 
         
-        <div class="ms-auto d-flex">
+        <div class="ms-auto d-flex align-items-center">
             @auth
-                <span class="nav-link text-info">Привет, {{ Auth::user()->name }}</span>
+                <!-- Колокольчик уведомлений -->
+                <div class="nav-item dropdown me-3">
+                    <a class="nav-link dropdown-toggle position-relative" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        🔔 
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ auth()->user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="navbarDropdown" style="width: 280px;">
+                        <li class="dropdown-header">Уведомления</li>
+                        @forelse(auth()->user()->unreadNotifications as $notification)
+                            <li>
+                                <a class="dropdown-item py-2 border-bottom" href="{{ route('articles.show', $notification->data['article_id']) }}?notify_id={{ $notification->id }}">
+                                    <small class="d-block text-muted">Новая статья:</small>
+                                    <span class="text-wrap">{{ $notification->data['article_name'] }}</span>
+                                </a>
+                            </li>
+                        @empty
+                            <li><span class="dropdown-item text-muted">Нет новых уведомлений</span></li>
+                        @endforelse
+                    </ul>
+                </div>
+
+                <span class="nav-link text-info me-3">Привет, {{ Auth::user()->name }}</span>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button class="btn btn-link nav-link">Выход</button>

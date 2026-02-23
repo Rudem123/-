@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Events\NewArticleEvent;
 use App\Mail\ArticleCreatedMail;
 use App\Models\Article;
+use App\Models\User;
+use App\Notifications\ArticleCreatedNotification;
 use App\Jobs\VeryLongJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class ArticleController extends Controller
 {
@@ -58,13 +61,28 @@ class ArticleController extends Controller
         // Мы не отправляем письмо сразу, а кидаем задачу в очередь.
         VeryLongJob::dispatch($article);
 
+        // 5. РАССЫЛКА СИСТЕМНЫХ УВЕДОМЛЕНИЙ В БД
+        // Получаем всех Читателей (role_id = 2), кроме текущего пользователя
+        $readers = User::where('role_id', 2)
+                       ->where('id', '!=', auth()->id())
+                       ->get();
+
+        // Отправляем уведомление всем читателям
+        Notification::send($readers, new ArticleCreatedNotification($article));
+
 
         return redirect()->route('articles.index');
     }
 
     // 4. ПРОСМОТР ОДНОЙ НОВОСТИ
-    public function show(Article $article)
+    public function show(Request $request, Article $article)
     {
+        // Если перешли по ссылке из уведомления — помечаем его прочитанным
+        $notify_id = $request->query('notify_id');
+        if ($notify_id && auth()->check()) {
+            auth()->user()->unreadNotifications->where('id', '=', $notify_id)->markAsRead();
+        }
+
         return view('articles.show', compact('article'));
     }
 
