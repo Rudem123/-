@@ -48,9 +48,9 @@ class ArticleController extends Controller
         ]);
 
         // 4. ОТПРАВКА ПИСЬМА
-        // Так как только модератор может сюда "попасть", письмо отправится в момент его действий.
-        // Укажи здесь почту, куда должно прийти уведомление (например, твою личную для теста).
-        Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
+        // Временно закомментировано для отладки
+        // Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
+
 
         return redirect()->route('articles.index');
     }

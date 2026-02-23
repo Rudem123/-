@@ -2,6 +2,16 @@
 
 @section('content')
     <h1>Добавить новость</h1>
+
+    @if ($errors->any())
+        <div class="alert alert-danger" style="color: red; background: #fee; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     
     <form action="{{ route('articles.store') }}" method="POST">
         @csrf
