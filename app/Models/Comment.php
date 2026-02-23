@@ -10,7 +10,7 @@ class Comment extends Model
     /** @use HasFactory<\Database\Factories\CommentFactory> */
     use HasFactory;
 
-    protected $fillable = ['text', 'article_id', 'user_id'];
+    protected $fillable = ['text', 'article_id', 'user_id', 'is_moderated'];
 
     public function article()
     {

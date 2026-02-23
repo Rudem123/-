@@ -22,6 +22,12 @@
         @can('create', App\Models\Article::class)
             <a class="nav-link text-success" href="{{ route('articles.create') }}">+ Создать новость</a>
         @endcan
+        @auth
+            @if(Auth::user()->role && Auth::user()->role->name === 'moderator')
+                <a class="nav-link text-warning" href="{{ route('comments.index') }}">Модерация комментов</a>
+            @endif
+        @endauth
+
 
         
         <div class="ms-auto d-flex">

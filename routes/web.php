@@ -35,7 +35,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('articles', ArticleController::class);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Модерация комментариев
+    Route::get('/comments/moderation', [App\Http\Controllers\CommentController::class, 'index'])->name('comments.index');
+    Route::get('/comments/{id}/accept', [App\Http\Controllers\CommentController::class, 'accept'])->name('comments.accept');
+    
+    // Переносим управление комментариями сюда
+    Route::post('/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{id}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
-Route::post('/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
-Route::delete('/comments/{id}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');

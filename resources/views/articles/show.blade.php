@@ -24,8 +24,12 @@
 
     <!-- Твой блок с комментариями (оставляем без изменений) -->
     <div class="mt-5">
-        <h3>Комментарии ({{ $article->comments->count() }})</h3>
-        @foreach($article->comments as $comment)
+        @if (session('status'))
+            <div class="alert alert-info shadow-sm border-0 mb-4">{{ session('status') }}</div>
+        @endif
+
+        <h3>Комментарии ({{ $article->comments->where('is_moderated', true)->count() }})</h3>
+        @foreach($article->comments->where('is_moderated', true) as $comment)
             <div class="card mb-2 p-3 shadow-sm border-0 bg-light">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -54,6 +58,7 @@
             <p class="text-muted mt-3">Чтобы оставить комментарий, пожалуйста, <a href="/login">войдите</a>.</p>
         @endauth
     </div>
+
 </div>
 @endsection
 
