@@ -26,7 +26,9 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role_id' => 2, // 2 — это ID роли "reader" (читатель)
         ]);
+
 
         return redirect()->route('login');
     }
