@@ -19,6 +19,10 @@
     <div class="navbar-nav w-100">
         <a class="nav-link" href="/">Главная</a>
         <a class="nav-link" href="/articles">Новости</a>
+        @can('create', App\Models\Article::class)
+            <a class="nav-link text-success" href="{{ route('articles.create') }}">+ Создать новость</a>
+        @endcan
+
         
         <div class="ms-auto d-flex">
             @auth
