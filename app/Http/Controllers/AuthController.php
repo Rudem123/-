@@ -29,7 +29,6 @@ class AuthController extends Controller
             'role_id' => 2, // 2 — это ID роли "reader" (читатель)
         ]);
 
-
         return redirect()->route('login');
     }
 
@@ -74,5 +73,4 @@ class AuthController extends Controller
 
         return redirect('/');
     }
-
 }

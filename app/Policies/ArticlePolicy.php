@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Article;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ArticlePolicy
 {
@@ -47,7 +46,6 @@ class ArticlePolicy
     {
         return false;
     }
-
 
     /**
      * Determine whether the user can restore the model.

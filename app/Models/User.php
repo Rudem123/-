@@ -13,7 +13,6 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +24,6 @@ class User extends Authenticatable
         'password',
         'role_id',
     ];
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -60,4 +58,3 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 }
-

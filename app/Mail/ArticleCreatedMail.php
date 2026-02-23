@@ -23,7 +23,7 @@ class ArticleCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Добавлена новая статья: ' . $this->article->name,
+            subject: 'Добавлена новая статья: '.$this->article->name,
         );
     }
 

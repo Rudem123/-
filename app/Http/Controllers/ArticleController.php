@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ArticleCreatedMail;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ArticleCreatedMail;
 
 class ArticleController extends Controller
 {
@@ -22,9 +22,11 @@ class ArticleController extends Controller
     // 2. ФОРМА СОЗДАНИЯ
     public function create()
     {
-        Gate::authorize('create', Article::class);
+        $this->authorize('create', Article::class);
+
         return view('articles.create');
     }
+
 
     // 3. СОХРАНЕНИЕ НОВОЙ ЗАПИСИ
     public function store(Request $request)
@@ -44,18 +46,15 @@ class ArticleController extends Controller
         $article = Article::create($request->all() + [
             'preview_image' => 'preview.jpg',
             'full_image' => 'full.jpeg',
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         // 4. ОТПРАВКА ПИСЬМА
         // Временно закомментировано для отладки
         // Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
 
-
         return redirect()->route('articles.index');
     }
-
-
 
     // 4. ПРОСМОТР ОДНОЙ НОВОСТИ
     public function show(Article $article)
@@ -67,6 +66,7 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         Gate::authorize('update', $article);
+
         return view('articles.edit', compact('article'));
     }
 

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,12 +21,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@mail.ru',
             'password' => bcrypt('123456'),
-            'role_id' => 1 // ID модератора
+            'role_id' => 1, // ID модератора
         ]);
 
         \App\Models\Article::factory(10)->create();
 
         Comment::factory(20)->create();
     }
-
 }
