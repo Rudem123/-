@@ -9,17 +9,23 @@ use App\Models\User;
 use App\Notifications\ArticleCreatedNotification;
 use App\Jobs\VeryLongJob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class ArticleController extends Controller
 {
-    // 1. СПИСОК (с пагинацией)
-    public function index()
+    // 1. СПИСОК (с пагинацией и кешированием)
+    public function index(Request $request)
     {
-        // Сортировка строго по ID от 1 до 20
-        $articles = Article::orderBy('id', 'asc')->paginate(5);
+        $page = $request->get('page', 1);
+
+        // Кешируем результат на 1 час
+        $articles = Cache::remember("articles_page_$page", 3600, function () {
+            // Сортировка строго по ID от 1 до 20
+            return Article::orderBy('id', 'asc')->paginate(5);
+        });
 
         return view('articles.index', compact('articles'));
     }
@@ -70,11 +76,13 @@ class ArticleController extends Controller
         // Отправляем уведомление всем читателям
         Notification::send($readers, new ArticleCreatedNotification($article));
 
+        // Очищаем кеш первой страницы
+        Cache::forget('articles_page_1');
 
         return redirect()->route('articles.index');
     }
 
-    // 4. ПРОСМОТР ОДНОЙ НОВОСТИ
+    // 4. ПРОСМОТР ОДНОЙ НОВОСТИ (с вечным кешированием)
     public function show(Request $request, Article $article)
     {
         // Если перешли по ссылке из уведомления — помечаем его прочитанным
@@ -82,6 +90,11 @@ class ArticleController extends Controller
         if ($notify_id && auth()->check()) {
             auth()->user()->unreadNotifications->where('id', '=', $notify_id)->markAsRead();
         }
+
+        // Кешируем статью и её комментарии "навсегда"
+        $article = Cache::rememberForever("article_show_{$article->id}", function () use ($article) {
+            return $article->load('comments');
+        });
 
         return view('articles.show', compact('article'));
     }
@@ -107,6 +120,8 @@ class ArticleController extends Controller
 
         $article->update($request->all());
 
+        Cache::flush(); // Полная очистка при изменении данных
+
         return redirect()->route('articles.index');
     }
 
@@ -116,6 +131,8 @@ class ArticleController extends Controller
         Gate::authorize('delete', $article);
 
         $article->delete();
+
+        Cache::flush(); // Полная очистка при удалении данных
 
         return redirect()->route('articles.index');
     }
