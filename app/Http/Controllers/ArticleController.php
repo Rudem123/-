@@ -50,8 +50,9 @@ class ArticleController extends Controller
         ]);
 
         // 4. ОТПРАВКА ПИСЬМА
-        // Временно закомментировано для отладки
-        // Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
+        // Так как только модератор может сюда "попасть", письмо отправится в момент его действий.
+        Mail::to('твой_адрес@mail.ru')->send(new ArticleCreatedMail($article));
+
 
         return redirect()->route('articles.index');
     }
