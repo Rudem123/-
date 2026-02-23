@@ -16,17 +16,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(RoleSeeder::class);
 
-        // ВОТ ЭТОТ БЛОК ВЫЗЫВАЕТ ОШИБКУ, ЕГО НУЖНО ЗАКОММЕНТИРОВАТЬ:
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@mail.ru',
+            'password' => bcrypt('123456'),
+            'role_id' => 1 // ID модератора
+        ]);
 
-        // Оставляем только твою фабрику для Новостей:
         \App\Models\Article::factory(10)->create();
 
         Comment::factory(20)->create();
     }
+
 }
