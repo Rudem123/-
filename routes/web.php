@@ -33,7 +33,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Защищенные маршруты (только для авторизованных)
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('articles', ArticleController::class);
+    Route::resource('articles', ArticleController::class)->middleware('log.views');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Модерация комментариев
