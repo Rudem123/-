@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ArticleCreatedMail;
 
 class ArticleController extends Controller
 {
@@ -35,13 +37,18 @@ class ArticleController extends Controller
             'desc' => 'required',
         ]);
 
-        Article::create($request->all() + [
+        // 1. Создаем статью
+        $article = Article::create($request->all() + [
             'preview_image' => 'preview.jpg', // заглушки для лабы
             'full_image' => 'full.jpeg',
         ]);
 
+        // 2. Отправляем письмо модератору (укажи адрес админа)
+        Mail::to('admin@mail.ru')->send(new ArticleCreatedMail($article));
+
         return redirect()->route('articles.index');
     }
+
 
     // 4. ПРОСМОТР ОДНОЙ НОВОСТИ
     public function show(Article $article)
