@@ -2,27 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Показывает страницу с формой
-    public function create()
+    public function registerForm()
     {
-        return view('auth.signin');
+        return view('auth.register');
     }
 
-    // Обрабатывает данные из формы
-    public function registration(Request $request)
+    public function register(Request $request)
     {
-        // Валидация данных
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'password' => 'required|min:6',
+        $data = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        // Возвращаем данные в формате JSON (как просит задание)
-        return response()->json($validated);
+        User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        return redirect()->route('login');
     }
+
+    public function loginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Присвоение токена Sanctum (как требует задание)
+            $user = Auth::user();
+            $user->createToken('auth_token')->plainTextToken;
+
+            return redirect('/articles');
+        }
+
+        return back()->withErrors(['email' => 'Неверный логин или пароль']);
+    }
+
+    public function logout(Request $request)
+    {
+        // 1. Удаляем токен (требование задания)
+        if ($request->user()) {
+            $request->user()->tokens()->delete();
+        }
+
+        // 2. Выходим именно из WEB-сессии (исправляет твою ошибку)
+        Auth::guard('web')->logout();
+
+        // 3. Аннулируем сессию и обновляем CSRF (требование задания)
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
 }

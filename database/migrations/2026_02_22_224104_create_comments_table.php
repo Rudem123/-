@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->text('text'); // Текст комментария
-            // Связь со статьей: при удалении статьи удалятся и комментарии (cascade)
+            $table->text('text');
+
             $table->foreignId('article_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

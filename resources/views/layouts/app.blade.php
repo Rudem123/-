@@ -15,13 +15,26 @@
 <body>
 
 <header>
-    <nav>
-        <a href="/">Главная</a>
-        <a href="/articles">Новости</a>
-        <a href="/about">О нас</a>
-        <a href="/contacts">Контакты</a>
-        <a href="/signin">Регистрация</a>
-    </nav>
+<nav class="navbar navbar-expand navbar-dark bg-dark px-3">
+    <div class="navbar-nav w-100">
+        <a class="nav-link" href="/">Главная</a>
+        <a class="nav-link" href="/articles">Новости</a>
+        
+        <div class="ms-auto d-flex">
+            @auth
+                <span class="nav-link text-info">Привет, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="btn btn-link nav-link">Выход</button>
+                </form>
+            @else
+                <a class="nav-link" href="/login">Вход</a>
+                <a class="nav-link" href="/register">Регистрация</a>
+            @endauth
+        </div>
+    </div>
+</nav>
+
 </header>
 
 <main>

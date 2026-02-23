@@ -24,7 +24,7 @@ class ArticleFactory extends Factory
             'name' => $fakerRu->sentence(3),
             'shortDesc' => $fakerRu->paragraph(1),
             'desc' => $fakerRu->paragraph(5),
-            'preview_image' => 'preview.jpg', 
+            'preview_image' => 'preview.jpg',
             'full_image' => 'full.jpeg',
         ];
     }

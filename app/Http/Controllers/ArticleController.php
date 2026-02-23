@@ -12,7 +12,7 @@ class ArticleController extends Controller
     {
         // Сортировка строго по ID от 1 до 20
         $articles = Article::orderBy('id', 'asc')->paginate(5);
-        
+
         return view('articles.index', compact('articles'));
     }
 
@@ -33,7 +33,7 @@ class ArticleController extends Controller
 
         Article::create($request->all() + [
             'preview_image' => 'preview.jpg', // заглушки для лабы
-            'full_image' => 'full.jpeg'
+            'full_image' => 'full.jpeg',
         ]);
 
         return redirect()->route('articles.index');
@@ -69,6 +69,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
+
         return redirect()->route('articles.index');
     }
 }
